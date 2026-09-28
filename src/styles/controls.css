@@ -1,0 +1,92 @@
+/* ============================================================
+   controls.css —— 响应式与触屏适配补充
+   ============================================================ */
+
+/* 窄屏下难度按钮铺满整行，避免换行错位 */
+@media (max-width: 720px) {
+  .panel__row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .panel__label {
+    min-width: 0;
+  }
+
+  .segmented {
+    width: 100%;
+  }
+
+  .segmented .btn {
+    flex: 1 1 auto;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .custom {
+    width: 100%;
+  }
+
+  .field {
+    flex: 1 1 90px;
+  }
+
+  .field input {
+    width: 100%;
+  }
+
+  .hint {
+    flex: 1 1 100%;
+  }
+}
+
+/* 触屏：放大点击区域与行高，改善可点性 */
+@media (pointer: coarse) {
+  .btn {
+    padding: 9px 14px;
+    font-size: 15px;
+  }
+
+  .face {
+    width: 54px;
+    height: 54px;
+    font-size: 26px;
+  }
+
+  .grid {
+    gap: 3px;
+  }
+
+  .cell {
+    border-radius: 4px;
+  }
+}
+
+/* 高对比度偏好：加强边框对比 */
+@media (prefers-contrast: more) {
+  .cell.is-hidden,
+  .cell.is-flagged,
+  .cell.is-question {
+    border-color: var(--text-dim);
+  }
+
+  .cell.is-revealed {
+    border-color: var(--text-dim);
+  }
+
+  .btn,
+  .hud__item {
+    border-color: var(--text-dim);
+  }
+}
+
+/* 打印不是目标场景，简单降级即可 */
+@media print {
+  .panel,
+  .help,
+  .face,
+  #restart {
+    display: none;
+  }
+}

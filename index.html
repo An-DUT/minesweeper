@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="零依赖网页版扫雷：三种经典难度、自定义难度、问号标记、双击快速展开、最高分记录、深色模式。">
+  <title>扫雷 Minesweeper</title>
+  <link rel="stylesheet" href="src/styles/base.css">
+  <link rel="stylesheet" href="src/styles/board.css">
+  <link rel="stylesheet" href="src/styles/controls.css">
+  <link rel="stylesheet" href="src/styles/theme.css">
+  <!--
+    在首帧之前应用已保存的主题，避免刷新时先闪一下浅色（FOUC）。
+    必须内联且放在样式表之后：模块脚本是延迟执行的，来不及阻止首帧渲染。
+  -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('minesweeper:theme');
+        var theme = saved === 'dark' || saved === 'light'
+          ? saved
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      } catch (e) {
+        document.documentElement.dataset.theme = 'light';
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div class="app">
+    <header class="app__header">
+      <h1 class="app__title">扫雷</h1>
+      <button id="theme-toggle" type="button" class="btn btn--ghost" aria-pressed="false">🌙 深色</button>
+    </header>
+
+    <section class="panel" aria-label="难度设置">
+      <div class="panel__row">
+        <span class="panel__label" id="difficulty-label">难度</span>
+        <div id="difficulty-buttons" class="segmented" role="group" aria-labelledby="difficulty-label">
+          <button type="button" class="btn" data-difficulty="beginner" aria-pressed="false">初级 9×9 / 10</button>
+          <button type="button" class="btn" data-difficulty="intermediate" aria-pressed="false">中级 16×16 / 40</button>
+          <button type="button" class="btn" data-difficulty="expert" aria-pressed="false">高级 30×16 / 99</button>
+        </div>
+      </div>
+
+      <div class="panel__row">
+        <span class="panel__label" id="custom-label">自定义</span>
+        <div class="custom" role="group" aria-labelledby="custom-label">
+          <label class="field">
+            <span>行</span>
+            <input id="custom-rows" type="number" min="5" max="40" step="1" value="9" inputmode="numeric">
+          </label>
+          <label class="field">
+            <span>列</span>
+            <input id="custom-cols" type="number" min="5" max="40" step="1" value="9" inputmode="numeric">
+          </label>
+          <label class="field">
+            <span>雷</span>
+            <input id="custom-mines" type="number" min="1" max="72" step="1" value="10" inputmode="numeric">
+          </label>
+          <button id="custom-apply" type="button" class="btn btn--primary">开始</button>
+          <span id="custom-note" class="hint" aria-live="polite"></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="board" class="board" data-status="ready" aria-label="雷区">
+      <div class="board__hud">
+        <div id="remaining-mines" class="hud__item" data-negative="false">
+          <span class="hud__label">剩余雷数</span>
+          <span id="mine-count" class="hud__value">10</span>
+        </div>
+
+        <button id="face" type="button" class="face" aria-label="重新开始">🙂</button>
+
+        <div class="hud__item">
+          <span class="hud__label">计时（秒）</span>
+          <span id="timer" class="hud__value">000</span>
+        </div>
+      </div>
+
+      <div class="board__sub">
+        <span>进度 <span id="progress" class="hud__mini">0/0</span></span>
+        <span>最高分 <span id="best-time" class="hud__mini">—</span></span>
+        <button id="restart" type="button" class="btn btn--small">重开</button>
+      </div>
+
+      <div id="grid" class="grid" role="grid" aria-label="扫雷格子"></div>
+    </section>
+
+    <p id="status" class="status" role="status" aria-live="polite" aria-atomic="true">点击任意格子开始（首点必定安全）</p>
+    <p id="message" class="message" aria-live="polite" aria-atomic="true" hidden></p>
+    <p id="storage-note" class="note" hidden></p>
+
+    <details class="help">
+      <summary>操作说明</summary>
+      <ul>
+        <li><strong>左键</strong>翻开格子；<strong>右键</strong>循环标记：无 → 🚩 旗 → ❓ 问号 → 无</li>
+        <li><strong>双击</strong>或<strong>中键</strong>已翻开的数字格：当周围旗数等于该数字时，快速翻开其余邻格</li>
+        <li><strong>键盘</strong>：方向键移动，<kbd>Enter</kbd> 翻开，<kbd>F</kbd> 或 <kbd>空格</kbd> 标记，<kbd>C</kbd> 快速展开</li>
+        <li><strong>触屏</strong>：轻触翻开，长按 0.4 秒插旗</li>
+        <li>首次点击必定安全，其周围 8 格也不会是雷</li>
+      </ul>
+    </details>
+  </div>
+
+  <script type="module" src="src/ui/app.js"></script>
+</body>
+</html>

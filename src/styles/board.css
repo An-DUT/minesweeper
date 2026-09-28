@@ -1,0 +1,283 @@
+/* ============================================================
+   board.css —— 雷区面板、HUD、格子
+   ============================================================ */
+
+.board {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+/* ── HUD ─────────────────────────────────────────── */
+.board__hud {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hud__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  min-width: 0;
+}
+
+.hud__item:last-child {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.hud__label {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.hud__value {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+#remaining-mines[data-negative="true"] .hud__value {
+  color: var(--danger);
+}
+
+.board__sub {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.board__sub .btn {
+  margin-left: auto;
+}
+
+.hud__mini {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* 笑脸重开按钮 */
+.face {
+  flex: 0 0 auto;
+  font-size: 22px;
+  line-height: 1;
+  width: 46px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.08s, border-color 0.15s;
+}
+
+.face:hover {
+  border-color: var(--accent);
+}
+
+.face:active {
+  transform: scale(0.94);
+}
+
+.face:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── 网格 ─────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 9), var(--cell-size));
+  grid-template-rows: repeat(var(--rows, 9), var(--cell-size));
+  gap: 2px;
+  padding: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  max-width: 100%;
+  overflow: auto;
+  touch-action: manipulation; /* 抑制双击缩放，长按不被浏览器手势抢走 */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.cell {
+  font-family: var(--font-mono);
+  font-size: calc(var(--cell-size) * 0.55);
+  font-weight: 700;
+  line-height: 1;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.08s, transform 0.05s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 未翻开 */
+.cell.is-hidden,
+.cell.is-flagged,
+.cell.is-question {
+  background: var(--cell-hidden);
+  border: 1px solid var(--cell-hidden-border);
+  border-top-color: color-mix(in srgb, var(--cell-hidden-border) 55%, #ffffff);
+  border-left-color: color-mix(in srgb, var(--cell-hidden-border) 55%, #ffffff);
+}
+
+.cell.is-hidden:hover,
+.cell.is-flagged:hover,
+.cell.is-question:hover {
+  filter: brightness(1.04);
+}
+
+.cell.is-hidden:active {
+  transform: scale(0.96);
+}
+
+.cell.is-flagged {
+  background: var(--cell-flagged);
+}
+
+.cell.is-question::after {
+  content: "?";
+  color: var(--text-dim);
+}
+
+/* 已翻开 */
+.cell.is-revealed {
+  background: var(--cell-revealed);
+  border: 1px solid var(--cell-revealed-border);
+  cursor: default;
+}
+
+/* 旗与雷用伪元素绘制，避免依赖图片资源 */
+.cell.is-flagged::after {
+  content: "🚩";
+  font-size: calc(var(--cell-size) * 0.62);
+}
+
+.cell.is-mine {
+  background: color-mix(in srgb, var(--danger) 14%, var(--cell-revealed));
+}
+
+.cell.is-mine::after {
+  content: "💣";
+  font-size: calc(var(--cell-size) * 0.62);
+}
+
+.cell.is-flagged.is-mine::after {
+  content: "🚩";
+}
+
+.cell.is-exploded {
+  background: var(--danger);
+}
+
+.cell.is-exploded::after {
+  content: "💥";
+  font-size: calc(var(--cell-size) * 0.66);
+}
+
+.cell.is-wrong-flag {
+  background: color-mix(in srgb, var(--danger) 18%, var(--cell-revealed));
+}
+
+.cell.is-wrong-flag::after {
+  content: "❌";
+  font-size: calc(var(--cell-size) * 0.6);
+}
+
+/* 数字配色 */
+.cell[data-state="revealed"][data-neighbors="1"] { color: var(--n1); }
+.cell[data-state="revealed"][data-neighbors="2"] { color: var(--n2); }
+.cell[data-state="revealed"][data-neighbors="3"] { color: var(--n3); }
+.cell[data-state="revealed"][data-neighbors="4"] { color: var(--n4); }
+.cell[data-state="revealed"][data-neighbors="5"] { color: var(--n5); }
+.cell[data-state="revealed"][data-neighbors="6"] { color: var(--n6); }
+.cell[data-state="revealed"][data-neighbors="7"] { color: var(--n7); }
+.cell[data-state="revealed"][data-neighbors="8"] { color: var(--n8); }
+
+/* 键盘焦点 */
+.cell:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  z-index: 1;
+}
+
+/* 终局时不再有指针反馈 */
+.board[data-status="won"] .cell,
+.board[data-status="lost"] .cell {
+  cursor: default;
+}
+
+.board[data-status="won"] .grid,
+.board[data-status="lost"] .grid {
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+/* ── 响应式：格子尺寸随视口收缩 ───────────────────── */
+@media (max-width: 1100px) {
+  :root { --cell-size: 28px; }
+}
+
+@media (max-width: 900px) {
+  :root { --cell-size: 26px; }
+}
+
+@media (max-width: 720px) {
+  :root { --cell-size: 24px; }
+  .board { padding: 8px; }
+}
+
+@media (max-width: 560px) {
+  :root { --cell-size: 22px; }
+  body { padding: 12px 8px 32px; }
+  .app__title { font-size: 19px; }
+  .hud__value { font-size: 17px; }
+}
+
+@media (max-width: 420px) {
+  :root { --cell-size: 20px; }
+}
+
+/* 触屏设备上略放大，兼顾可点性 */
+@media (pointer: coarse) {
+  :root { --cell-size: 30px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

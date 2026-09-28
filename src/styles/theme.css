@@ -1,0 +1,58 @@
+/* ============================================================
+   theme.css —— 深色模式变量覆盖
+   由 html[data-theme="dark"] 驱动（见 src/ui/theme.js）
+   ============================================================ */
+
+html[data-theme="dark"] {
+  --bg: #0f1319;
+  --surface: #171c24;
+  --surface-2: #1e242e;
+  --border: #2c3440;
+  --text: #e6ebf2;
+  --text-dim: #9aa6b8;
+  --accent: #5b8cf7;
+  --accent-text: #0b1017;
+  --danger: #ef6b6b;
+  --success: #4cc38a;
+
+  --cell-hidden: linear-gradient(180deg, #2b3341, #232a35);
+  --cell-hidden-border: #1a2029;
+  --cell-revealed: #1b212a;
+  --cell-revealed-border: #262d38;
+  --cell-flagged: #3a3320;
+
+  --n1: #6ea8ff;
+  --n2: #57d38c;
+  --n3: #ff7b74;
+  --n4: #c08cff;
+  --n5: #ffb454;
+  --n6: #4fd1d9;
+  --n7: #d5dbe6;
+  --n8: #a8b2c2;
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+/* 深色下未翻开格的立体感需要更强的对比 */
+html[data-theme="dark"] .cell.is-hidden,
+html[data-theme="dark"] .cell.is-flagged,
+html[data-theme="dark"] .cell.is-question {
+  border-top-color: color-mix(in srgb, var(--cell-hidden-border) 40%, #ffffff 12%);
+  border-left-color: color-mix(in srgb, var(--cell-hidden-border) 40%, #ffffff 12%);
+}
+
+html[data-theme="dark"] .cell.is-exploded {
+  background: var(--danger);
+}
+
+html[data-theme="dark"] .cell.is-exploded::after {
+  color: #1a1a1a;
+}
+
+/* 系统偏好深色且用户未显式选择时，由 JS 设置 data-theme，
+   此处仅作为 JS 未执行（如 file:// 下模块被阻止）时的兜底 */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    color-scheme: dark;
+  }
+}

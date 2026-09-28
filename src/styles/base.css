@@ -1,0 +1,284 @@
+/* ============================================================
+   base.css —— CSS 变量、布局与通用控件
+   主题相关变量在 theme.css 中按 [data-theme] 覆盖
+   ============================================================ */
+
+:root {
+  --font-sans: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+
+  --bg: #eef1f6;
+  --surface: #ffffff;
+  --surface-2: #f5f7fb;
+  --border: #d3dae6;
+  --text: #1d2433;
+  --text-dim: #5b6679;
+  --accent: #2f6fed;
+  --accent-text: #ffffff;
+  --danger: #d64545;
+  --success: #2f9e63;
+
+  --cell-size: 30px;
+  --radius: 10px;
+  --radius-sm: 6px;
+
+  /* 格子配色（明色） */
+  --cell-hidden: linear-gradient(180deg, #fdfefe, #e3e8f0);
+  --cell-hidden-border: #b9c3d4;
+  --cell-revealed: #f7f9fc;
+  --cell-revealed-border: #e2e7ef;
+  --cell-flagged: #fff4d6;
+
+  --n1: #1e66d0;
+  --n2: #1f8a4c;
+  --n3: #d2413a;
+  --n4: #7040a8;
+  --n5: #b26a00;
+  --n6: #1a8f95;
+  --n7: #343a46;
+  --n8: #6b7280;
+
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 8px 24px rgba(16, 24, 40, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  padding: 20px 16px 48px;
+  display: flex;
+  justify-content: center;
+}
+
+.app {
+  width: 100%;
+  max-width: min(1100px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.app__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.app__title {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+}
+
+/* ── 面板 ─────────────────────────────────────────── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.panel__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.panel__label {
+  min-width: 52px;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ── 按钮 ─────────────────────────────────────────── */
+.btn {
+  font: inherit;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.05s;
+}
+
+.btn:hover {
+  background: var(--surface);
+  border-color: var(--accent);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.btn--primary:hover {
+  filter: brightness(1.08);
+  background: var(--accent);
+}
+
+.btn--ghost {
+  background: transparent;
+}
+
+.btn--small {
+  padding: 3px 10px;
+  font-size: 13px;
+}
+
+.segmented {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ── 自定义难度表单 ───────────────────────────────── */
+.custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.field {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.field input {
+  font: inherit;
+  font-size: 14px;
+  width: 62px;
+  padding: 5px 7px;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.field input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* ── 提示文案 ─────────────────────────────────────── */
+.status,
+.message,
+.note {
+  margin: 0;
+  text-align: center;
+}
+
+.status {
+  color: var(--text-dim);
+  font-size: 14px;
+  min-height: 21px;
+}
+
+.message {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.note {
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.help {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.help summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.help ul {
+  margin: 8px 0 2px;
+  padding-left: 20px;
+}
+
+.help li + li {
+  margin-top: 4px;
+}
+
+kbd {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0 4px;
+}
+
+/* 屏幕阅读器专用 */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
